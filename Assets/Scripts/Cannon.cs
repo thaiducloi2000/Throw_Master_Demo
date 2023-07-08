@@ -65,6 +65,7 @@ public class Cannon : MonoBehaviour
 
             bullet.SetActive(true);
             Rigidbody2D bulletRigidbody = bullet.GetComponent<Rigidbody2D>();
+            bulletRigidbody.gravityScale = 0f;
             bulletRigidbody.AddForce(bullet.transform.right * bulletForce, ForceMode2D.Impulse);
         }
     }
@@ -80,9 +81,6 @@ public class Cannon : MonoBehaviour
                 return bullets[i];
             }
         }
-
-        //GameObject newBullet = Instantiate(bullet);
-        //bullets.Add(newBullet);
         return null;
     }
 

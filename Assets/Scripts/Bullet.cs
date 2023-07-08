@@ -5,39 +5,37 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float speed = 10f;
-    [SerializeField] private float gravity = 9.8f;
-    public float bounceForce = 5f;
-    [SerializeField] private Rigidbody2D rigidbody;
+    public float bounceForce = 1f;
+    [SerializeField] private Rigidbody2D rd;
 
     private void Start()
     {
-        this.rigidbody = GetComponent<Rigidbody2D>();
+        this.rd = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.right * speed * Time.deltaTime);
+        //transform.Translate(Vector3.right * speed * Time.deltaTime);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            BounceBullet(collision.contacts[0].normal);
+            BounceBullet(collision.contacts[0].normal,this.gameObject);
         }
         if (collision.gameObject.CompareTag("Target"))
         {
-            StartCoroutine(DestroyBulletAfterDelay(1f, collision.gameObject));
-            BounceBullet(collision.contacts[0].normal);
+            BounceBullet(collision.contacts[0].normal, collision.gameObject);
         }
     }
 
-    void BounceBullet(Vector2 collisionNormal)
+    void BounceBullet(Vector2 collisionNormal,GameObject obj)
     {
-        Vector2 newDirection = Vector2.Reflect(rigidbody.velocity.normalized, collisionNormal);
-        rigidbody.velocity = newDirection * bounceForce;
-        StartCoroutine(DestroyBulletAfterDelay(2f,this.gameObject));
+        Vector2 newDirection = Vector2.Reflect(this.rd.velocity.normalized, collisionNormal);
+        this.rd.velocity = newDirection * bounceForce;
+        StartCoroutine(DestroyBulletAfterDelay(2f, obj));
     }
 
     IEnumerator DestroyBulletAfterDelay(float delay,GameObject obj)
